@@ -56,8 +56,9 @@ function AHCVideoAnalysis_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % get the name of the rat and the directory for the struct files
 structfiledir='E:\Risa\Dropbox\Structs';
+% get the name of the experiments and the directory of the movie files
+datafiledir='X:\RISAKAWAI3';
 
-% structfiledir=uigetdir(matlabroot,'monkeypoops');
 ratfilenames=dir([structfiledir filesep]);
 rats={'Please select a rat','---'};
 nrats=0;
@@ -67,11 +68,6 @@ for i=1:length(ratfilenames)
         rats{1,nrats+2}=ratfilenames(i).name(1:end-4);
     end
 end
-
-% get the name of the experiments and the directory of the data files
-datafiledir='X:\RISAKAWAI3';
-% datafiledir='\\ANNAPURNA\RatControlOp\RAYMONDKO3\Data';
-% datafiledir=uigetdir(matlabroot,'monkeypoopsalot');
 exptfilenames=dir([datafiledir filesep]);
 expts=[];
 nexpts=0;
@@ -399,7 +395,8 @@ if popup2_sel_index>=3
                     handles.ratstruct(i).rewards(j),...
                     handles.ratstruct(i).triggerSampleNum(j,:),...
                     handles.ratstruct(i).tapTimes{j}(1),...
-                    cell2mat(handles.ratstruct(i).startTime)};
+                    cell2mat(handles.ratstruct(i).startTime),...
+                    handles.ratstruct(i).tapTimes{j}(end)};
             end
         end
     end
@@ -833,7 +830,7 @@ if numel(handles.queue)
         dat=handles.allData;
         exptID=str2num(handles.selectedexpt); %#ok<ST2NM>
         
-        movieFrames0=getMovie(exptID, cell2mat(dat(1,8)), cell2mat(dat(1,9)), 1, handles.moviefiles); %#ok<NASGU>
+        movieFrames0=getMovie(exptID, cell2mat(dat(1,8)), cell2mat(dat(1,9)), 1, handles.moviefiles); 
         wth=2*movieFrames0.width/movieFrames0.height;
         width=pos(4)*wth*steps+pos(4)/5*(steps+1);
         height=pos(4);
@@ -845,7 +842,7 @@ if numel(handles.queue)
         for step=1:steps
             % using Risa's getMovie function to load videos
             trial=handles.queue(step);
-            movieFrames=getMovie(exptID, cell2mat(dat(trial,8)), cell2mat(dat(trial,9)), nframes, handles.moviefiles); %#ok<NASGU>
+            movieFrames=getMovie(exptID, cell2mat(dat(trial,8)), cell2mat(dat(trial,9)), 0, handles.moviefiles, 'LastTap', cell2mat(dat(trial,11))); %#ok<NASGU>
             axispos=[((pos(4)*wth+pos(4)/5)*(step-1)+pos(4)/5)/width 0 wth*height/width 1];
             handles.WSa(step)=axes('units','norm','outerposition',axispos,'position',axispos,'parent',handles.uipanel6);
             imagehandle=imshow(movieFrames.frames(1).cdata,'Parent',handles.WSa(step));

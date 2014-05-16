@@ -4,20 +4,8 @@ function movieFrames = getMovie(exptID, triggerSampleNum, Tap1CPUTime, numOfFram
 pretapNumOfFrames = 25;
 postTapNumOfFrames = 25;
 
-LastTapCPUTime = [];
-
-if ~isempty(varargin)
-    for m = 1:2:length(varargin)
-        key = varargin{m};
-        val = varargin{m+1};
-        switch key
-            case 'LastTap'
-                LastTapCPUTime = val;
-            otherwise
-                error('Typo in getMovie')
-        end
-    end
-end
+if isempty(varargin)
+    
 
 % %% Get directory information for exptID in server
 extension = '-0.mp4';
@@ -45,11 +33,7 @@ else
     
     %% Find closest timestamp to tap1cputime
     tap1FrameNum = find(timesFile<=Tap1CPUTime, 1, 'last');
-    if isempty(LastTapCPUTime)
-        movieFrames = mmread([directoryName num2str(fileName) extension],tap1FrameNum-pretapNumOfFrames:tap1FrameNum-pretapNumOfFrames+numOfFrames-1);
-    else
-        lastTapFrameNum = find(timesFile <= LastTapCPUTime, 1, 'last');
-        movieFrames = mmread([directoryName num2str(fileName) extension],tap1FrameNum-pretapNumOfFrames:lastTapFrameNum+postTapNumOfFrames-1);
-    end
+    lastTapFrameNum = find(timesFile <= LastTapCPUTime, 1, 'last');
+    movieFrames = mmread([directoryName num2str(fileName) extension],tap1FrameNum-pretapNumOfFrames:lastTapFrameNum+postTapNumOfFrames-1);
 %     movieTimestamps = timesFile(tap1FrameNum-pretapNumOfFrames:tap1FrameNum+postTapNumOfFrames-1);
 end
