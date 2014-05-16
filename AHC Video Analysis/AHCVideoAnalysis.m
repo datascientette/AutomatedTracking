@@ -25,6 +25,7 @@ function varargout = AHCVideoAnalysis(varargin)
 % Last Modified by GUIDE v2.5 16-May-2014 11:10:47
 
 % Begin initialization code - DO NOT EDIT
+
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
@@ -41,6 +42,7 @@ if nargout
 else
     gui_mainfcn(gui_State, varargin{:});
 end
+
 % End initialization code - DO NOT EDIT
 
 % --- Executes just before AHCVideoAnalysis is made visible.
@@ -143,7 +145,7 @@ set(handles.editChTraj,'String',0);
 set(handles.editChROI,'String',0);
 
 % initialize number of taps in popupmenu4
-set(handles.popupmenu4, 'String', {'# Taps','---','All','1','2','2+', '3','>=4'},'Value',1);
+set(handles.popupmenu4, 'String', {'# Taps','---','All','1','2','>=2', '3','>=4'},'Value',1);
 % initialize experiment IDs in selectExpt
 set(handles.popupmenu5, 'String', {'Reward','---','None','1','2','3','4','5','0~5'},'Value',1);
 % intialize minDelay in edit 1
@@ -560,7 +562,7 @@ function pushbutton9_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % taps=get(handles.popupmenu4,'Value')-3;
-taps = get(handles.popupmenu4, 'String');
+taps = get(handles.popupmenu4, 'Value');
 rewards=get(handles.popupmenu5,'Value')-3;
 minDelay=str2num(get(handles.edit1,'String'));
 maxDelay=str2num(get(handles.edit2,'String'));
@@ -573,16 +575,24 @@ else
     dat=handles.allData;
     
     % get logical indx of selected trials based on # taps
-    switch taps
-        case '0'
-            itaps=1:size(dat,1);
-        case '2+'
-            itaps=find(cell2mat(dat(:,4))>1);
-        case '4+'
-            itaps=find(cell2mat(dat(:,4))>1);
-        otherwise
-            itaps=find(cell2mat(dat(:,4))==num2str(taps));
-    end
+    tapChoices = get(handles.popupmenu4, 'String');
+    tapChoice = tapChoices{taps};
+
+        switch tapChoice
+            case '0'
+                itaps=1:size(dat,1);
+            case '>=2'
+                itaps=find(cell2mat(dat(:,4))>1);
+            case '>=4'
+                itaps=find(cell2mat(dat(:,4))>3);
+            otherwise
+                tapsNum = str2num(tapChoice);
+                if ~isempty(tapsNum)
+                    itaps=find(cell2mat(dat(:,4))== tapsNum);
+                else
+                    itaps=1:size(dat,1);
+                end
+        end
 %     if taps<=0
 %         itaps=1:size(dat,1);
 %     elseif taps>0 && taps<4
