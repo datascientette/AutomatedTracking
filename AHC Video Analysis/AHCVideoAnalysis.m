@@ -828,7 +828,7 @@ if numel(handles.queue)
         steps=numel(handles.queue);
         pos=get(handles.uipanel6,'position');
         dat=handles.allData;
-        exptID=str2num(handles.selectedexpt); %#ok<ST2NM>
+        exptID=str2num(handles.selectedexpt);
         
         movieFrames0=getMovie(exptID, cell2mat(dat(1,8)), cell2mat(dat(1,9)), 1, handles.moviefiles); 
         wth=2*movieFrames0.width/movieFrames0.height;
@@ -1585,9 +1585,10 @@ function loadTrajectories_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 Traj={[],[],[],[],[],[],[]};
-['Output' filesep handles.selectedrat filesep]
-if exist(['Output' filesep handles.selectedrat filesep])
-    R=genpath(['Output' filesep handles.selectedrat filesep]);
+exptID= handles.selectedexpt;
+currentPath = ['Output' filesep handles.selectedrat filesep exptID filesep];
+if exist(currentPath)
+    R=genpath(currentPath);
     p=pathlist(R);
     for i=1:numel(p)
         if exist([p{i} filesep 'chData.mat'])
