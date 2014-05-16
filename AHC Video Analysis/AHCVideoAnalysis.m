@@ -143,7 +143,7 @@ set(handles.editChTraj,'String',0);
 set(handles.editChROI,'String',0);
 
 % initialize number of taps in popupmenu4
-set(handles.popupmenu4, 'String', {'# Taps','---','All','1','2','3','>=4'},'Value',1);
+set(handles.popupmenu4, 'String', {'# Taps','---','All','1','2','2+', '3','>=4'},'Value',1);
 % initialize experiment IDs in selectExpt
 set(handles.popupmenu5, 'String', {'Reward','---','None','1','2','3','4','5','0~5'},'Value',1);
 % intialize minDelay in edit 1
@@ -559,7 +559,8 @@ function pushbutton9_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-taps=get(handles.popupmenu4,'Value')-3;
+% taps=get(handles.popupmenu4,'Value')-3;
+taps = get(handles.popupmenu4, 'String');
 rewards=get(handles.popupmenu5,'Value')-3;
 minDelay=str2num(get(handles.edit1,'String'));
 maxDelay=str2num(get(handles.edit2,'String'));
@@ -572,13 +573,23 @@ else
     dat=handles.allData;
     
     % get logical indx of selected trials based on # taps
-    if taps<=0
-        itaps=1:size(dat,1);
-    elseif taps>0 && taps<4
-        itaps=find(cell2mat(dat(:,4))==taps);
-    else
-        itaps=find(cell2mat(dat(:,4))>=taps);
+    switch taps
+        case '0'
+            itaps=1:size(dat,1);
+        case '2+'
+            itaps=find(cell2mat(dat(:,4))>1);
+        case '4+'
+            itaps=find(cell2mat(dat(:,4))>1);
+        otherwise
+            itaps=find(cell2mat(dat(:,4))==num2str(taps));
     end
+%     if taps<=0
+%         itaps=1:size(dat,1);
+%     elseif taps>0 && taps<4
+%         itaps=find(cell2mat(dat(:,4))==taps);
+%     else
+%         itaps=find(cell2mat(dat(:,4))>=taps);
+%     end
     
     % get logical indx of selected trials based on rewards
     if rewards>=0 && rewards<=5
