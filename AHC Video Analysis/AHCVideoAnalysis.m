@@ -57,7 +57,8 @@ function AHCVideoAnalysis_OpeningFcn(hObject, eventdata, handles, varargin)
 % get the name of the rat and the directory for the struct files
 structfiledir='E:\Risa\Dropbox\Structs';
 % get the name of the experiments and the directory of the movie files
-datafiledir='X:\RISAKAWAI3';
+% datafiledir='X:\RISAKAWAI3';
+datafiledir = 'X:\RISAKAWAI5';
 
 ratfilenames=dir([structfiledir filesep]);
 rats={'Please select a rat','---'};

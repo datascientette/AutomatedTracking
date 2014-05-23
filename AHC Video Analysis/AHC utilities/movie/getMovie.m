@@ -22,7 +22,8 @@ end
 % %% Get directory information for exptID in server
 extension = '-0.mp4';
 % directoryName = ['\\RatControlServ\RatControlOp\RISAKAWAI3\Data\' num2str(exptID) '\'];
-directoryName = ['X:\RISAKAWAI3\' num2str(exptID) '\'];
+% directoryName = ['X:\RISAKAWAI3\' num2str(exptID) '\'];
+directoryName = ['X:\RISAKAWAI5\' num2str(exptID) '\'];
 % directory = dir([directoryName '*.mp4']);
 % 
 % fileNames = zeros(numel(directory), 1);
